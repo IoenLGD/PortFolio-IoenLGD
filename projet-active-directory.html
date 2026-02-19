@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Directory - Ioen Le Gourlay-Denis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+		<a href="javascript:history.back()" class="back-arrow" title="Retour à la page précédente">←</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="cv.html">CV</a></li>
+				<li><a href="projets.html">Projets</a></li>
+				<li><a href="stages.html">Stages</a></li>
+				<li><a href="contact.html">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
+    <main>
+        <section id="projet">
+            <h1>Mise en place d’un Active Directory sous Windows Server</h1>
+            <p>Environnement de test sous VirtualBox : serveur AD + poste client, réseau interne isolé.</p>
+            
+            <h2>1. Préparation</h2>
+            <ul>
+                <li>Adresses IP statiques sur serveur et client.</li>
+                <li>Désactiver IPv6 et pare-feu (test).</li>
+                <li>Tester ping entre machines.</li>
+                <li>Installer VirtualBox Guest Additions.</li>
+            </ul>
+            
+            <h2>2. Installation AD DS + DNS</h2>
+            <ul>
+                <li>Ajouter rôle "Active Directory Domain Services" via Gestionnaire de serveur.</li>
+                <li>Promouvoir en contrôleur de domaine → Nouvelle forêt (ex. : wsrv.labo).</li>
+                <li>Créer compte admin dédié (ex. admin_AD).</li>
+            </ul>
+            
+            <h2>3. Utilisateurs et rattachement</h2>
+            <ul>
+                <li>Créer utilisateur test (ex. BTSSIO / Passw0rd).</li>
+                <li>Rattacher client au domaine → Redémarrer.</li>
+            </ul>
+            
+            <h2>4. Structure OU, Groupes, GPO</h2>
+            <ul>
+                <li>Créer OU société → Sous-OU par service.</li>
+                <li>Groupes : Sécurité / Distribution, étendues (Global, Universel...).</li>
+                <li>GPO : Mappage lecteurs, fond d'écran, redirection dossiers, etc.</li>
+            </ul>
+            
+            <h2>5. Profils et scripts</h2>
+            <ul>
+                <li>Profils itinérants / obligatoires.</li>
+                <li>Scripts de connexion (.bat) dans SYSVOL\Scripts.</li>
+            </ul>
+            
+            <h2>6. Bonnes pratiques</h2>
+            <ul>
+                <li>Politique mots de passe stricte.</li>
+                <li>Désactiver comptes inactifs.</li>
+                <li>Surveiller journaux + <code>gpupdate /force</code>.</li>
+            </ul>
+            
+            <!-- Ajoute tes nombreuses captures ici -->
+        </section>
+    </main>
+    <footer>
+		<p>© 2026 Ioen Le Gourlay-Denis – <a href="mentions-legales.html">Tous droits réservés</a></p>
+	</footer>
+</body>
+</html>

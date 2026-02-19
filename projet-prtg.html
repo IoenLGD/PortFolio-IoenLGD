@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRTG Network Monitor - Ioen Le Gourlay-Denis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <a href="javascript:history.back()" class="back-arrow" title="Retour à la page précédente">←</a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="cv.html">CV</a></li>
+                <li><a href="projets.html">Projets</a></li>
+                <li><a href="stages.html">Stages</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="projet">
+            <h1>PRTG Network Monitor – Mode Opératoire Complet</h1>
+            <p class="meta">Réalisé en stage BTS SIO SISR – Saint Joseph la Salle, Lorient<br>
+            Par : ELBASAN Kendal, LE GOURLAY-DENIS Ioen, DECOURT Enzo<br>
+            Session : janvier/mars 2026</p>
+
+            <h2>1. Qu'est-ce que PRTG ?</h2>
+            <p>PRTG (Paessler Router Traffic Grapher) est un logiciel de supervision réseau tout-en-un sans agent. Il surveille en temps réel l'état, la disponibilité et les performances d'une infrastructure IT (routeurs, switchs, serveurs, pare-feu, NAS, etc.).</p>
+            <p>Objectifs principaux :</p>
+            <ul>
+                <li>Détecter les pannes ou anomalies avant impact utilisateur</li>
+                <li>Analyser performances (CPU, RAM, bande passante, latence...)</li>
+                <li>Prévenir les incidents via alertes (email, push, son...)</li>
+                <li>Produire graphiques, rapports et tableaux de bord</li>
+            </ul>
+            <p>Utilisé en entreprise, établissements scolaires, hôpitaux, réseaux personnels avancés et projets BTS SIO.</p>
+
+            <h2>2. Fonctionnement de base</h2>
+            <p>PRTG repose sur une hiérarchie :</p>
+            <ul>
+                <li><strong>Groupe</strong> : catégorie (ex. Réseau, Serveurs)</li>
+                <li><strong>Appareil (Device)</strong> : machine/équipement (IP ou nom DNS)</li>
+                <li><strong>Capteur (Sensor)</strong> : élément surveillé (Ping, CPU, trafic...)</li>
+            </ul>
+            <p>Protocoles utilisés : Ping, SNMP, WMI (Windows), SSH (Linux), HTTP/HTTPS, NetFlow/sFlow...</p>
+
+            <h2>3. Installation de PRTG (sur Windows)</h2>
+            <p>PRTG s'installe uniquement sur Windows (10/11 ou Server 2016+).</p>
+            <ol>
+                <li>Télécharger la version Free (100 capteurs) sur <a href="https://www.paessler.com/prtg/download">site officiel Paessler</a>.</li>
+                <li>Lancer l'installateur (.exe).</li>
+                <li>Accepter la licence, choisir dossier (défaut OK).</li>
+                <li>Entrer email et mot de passe admin fort.</li>
+                <li>Laisser ports par défaut → Installer (5-10 min).</li>
+            </ol>
+            <p>Premier accès : <code>https://localhost</code> (ou IP du serveur) → Utilisateur : <strong>prtgadmin</strong> / mot de passe défini.</p>
+
+            <h2>4. Découverte automatique du réseau</h2>
+            <ol>
+                <li>Dans l'arborescence → Clic droit sur "Probe locale" → "Ajouter un groupe de découverte automatique".</li>
+                <li>Dans "Informations d'identification" : entrer plage IP (ex. 192.168.1.1 - 192.168.1.254).</li>
+                <li>Lancer la découverte → PRTG scanne et crée automatiquement appareils + capteurs de base (Ping, SNMP...).</li>
+            </ol>
+
+            <h2>5. Mise en place de capteurs essentiels</h2>
+            <ul>
+                <li><strong>Capteur Ping</strong> (sur tous les équipements) :
+                    <ol>
+                        <li>Clic droit sur appareil/groupe → Ajouter capteur.</li>
+                        <li>Rechercher "Ping" → Sélectionner "Ping standard".</li>
+                        <li>Valider → Vérifie disponibilité (vert = OK, rouge = hors ligne).</li>
+                    </ol>
+                </li>
+                <li><strong>Capteur Trafic (ports fibres optiques d'un switch)</strong> :
+                    <ol>
+                        <li>Activer SNMP sur le switch (communauté "public" ou privée).</li>
+                        <li>Sur l'appareil switch dans PRTG → Ajouter capteur → "SNMP Traffic".</li>
+                        <li>Sélectionner le port fibre → Valider → Surveille bande passante entrante/sortante/totale.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h2>6. Configuration des alertes et notifications par email</h2>
+            <ol>
+                <li>Aller dans "Configuration" → "Notifications" → Créer notification "Email".</li>
+                <li>Configurer serveur SMTP (ex. Gmail : smtp.gmail.com, port 587, TLS, identifiants).</li>
+                <li>Créer déclencheur sur capteur :
+                    <ul>
+                        <li>Pour Ping : "Down" → Sévérité Haute → Notification email.</li>
+                        <li>Pour Trafic : "Speed In/Out/Total > seuil" (ex. 90% saturation) → Notification email.</li>
+                    </ul>
+                </li>
+                <li>Tester l'alerte pour vérifier réception.</li>
+            </ol>
+
+            <h2>7. Bonnes pratiques et résumé</h2>
+            <ul>
+                <li>Toujours ajouter un capteur Ping par appareil</li>
+                <li>Nommer clairement groupes/appareils/capteurs</li>
+                <li>Limiter capteurs inutiles (PRTG Free : max 100)</li>
+                <li>Utiliser avec GLPI pour tickets automatisés</li>
+            </ul>
+            <p><strong>Phrase clé</strong> : PRTG surveille en continu, alerte avant panne et anticipe les problèmes réseau.</p>
+
+            <!-- Ajoute tes captures d'écran ici -->
+            <!-- <img src="images/prtg-decouverte-reseau.png" alt="Découverte automatique"> -->
+            <!-- <img src="images/prtg-capteur-ping.png" alt="Capteur Ping"> -->
+            <!-- <img src="images/prtg-trafic-switch.png" alt="Trafic ports fibres"> -->
+        </section>
+    </main>
+
+    <footer>
+		<p>© 2026 Ioen Le Gourlay-Denis – <a href="mentions-legales.html">Tous droits réservés</a></p>
+	</footer>
+</body>
+</html>

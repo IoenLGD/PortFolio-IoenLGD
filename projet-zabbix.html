@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zabbix - Installation & Monitoring - Ioen Le Gourlay-Denis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<header>
+		<a href="javascript:history.back()" class="back-arrow" title="Retour à la page précédente">←</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="cv.html">CV</a></li>
+				<li><a href="projets.html">Projets</a></li>
+				<li><a href="stages.html">Stages</a></li>
+				<li><a href="contact.html">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
+    <main>
+        <section id="projet">
+            <h1>Zabbix 7.4 – Installation et Monitoring Web</h1>
+
+            <h2>Partie 1 : Installation sur Debian 13 (VMWare)</h2>
+            <h3>Prérequis</h3>
+            <ul>
+                <li><code>sudo apt update && sudo apt upgrade</code></li>
+                <li>PHP : <code>sudo apt install php php-mysqli</code></li>
+                <li>MariaDB : <code>sudo apt install mariadb-server</code> puis <code>sudo mariadb-secure-installation</code></li>
+                <li>Apache : <code>sudo apt install apache2 libapache2-mod-php</code></li>
+            </ul>
+
+            <h3>Installation Zabbix</h3>
+            <pre>
+wget https://repo.zabbix.com/zabbix/7.4/release/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.4+debian13_all.deb
+sudo dpkg -i zabbix-release_latest_7.4+debian13_all.deb
+sudo apt update
+sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent2
+            </pre>
+
+            <h3>Base de données</h3>
+            <pre>
+create database zabbix character set utf8mb4 collate utf8mb4_bin;
+create user zabbix@localhost identified by 'ton_mot_de_passe';
+grant all privileges on zabbix.* to zabbix@localhost;
+zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql -uzabbix -p zabbix
+            </pre>
+
+            <h3>Configuration & démarrage</h3>
+            <ul>
+                <li>Éditer <code>/etc/zabbix/zabbix_server.conf</code> → ajouter <code>DBPassword=ton_mot_de_passe</code></li>
+                <li><code>sudo systemctl restart zabbix-server zabbix-agent2 apache2</code></li>
+                <li>Accès : http://IP/zabbix → Admin / zabbix (changer le mot de passe immédiatement !)</li>
+            </ul>
+
+            <h2>Partie 2 : Scénario Web de monitoring</h2>
+            <ol>
+                <li>Créer hôte "LDLC" (groupe : Linux servers)</li>
+                <li>Créer scénario web :
+                    <ul>
+                        <li>Nom : Zabbix doc LDLC</li>
+                        <li>Intervalle : 10s – Tentatives : 10</li>
+                    </ul>
+                </li>
+                <li>Ajouter étape :
+                    <ul>
+                        <li>URL : https://www.ldlc.com/</li>
+                        <li>Chaîne requise : "populaires"</li>
+                        <li>Code : 200</li>
+                    </ul>
+                </li>
+                <li>Créer déclencheur : Download speed > 5 → Sévérité Haute</li>
+                <li>Vérifier dans Surveillance → Web</li>
+            </ol>
+
+            <!-- Ajoute tes captures ici -->
+        </section>
+    </main>
+    <footer>
+		<p>© 2026 Ioen Le Gourlay-Denis – <a href="mentions-legales.html">Tous droits réservés</a></p>
+	</footer>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serveur LAMP - Ioen Le Gourlay-Denis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+		<a href="javascript:history.back()" class="back-arrow" title="Retour à la page précédente">←</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="cv.html">CV</a></li>
+				<li><a href="projets.html">Projets</a></li>
+				<li><a href="stages.html">Stages</a></li>
+				<li><a href="contact.html">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
+    <main>
+        <section id="projet">
+            <h1>Installation et paramétrage d’un serveur LAMP sous Debian</h1>
+            <p>Objectif : Mettre en place un serveur web LAMP (Linux, Apache, MariaDB, PHP) en environnement virtualisé (VirtualBox), avec configuration réseau et accès distant SSH.</p>
+            
+            <h2>1. Mise à jour du système</h2>
+            <ul>
+                <li><code>sudo apt update</code></li>
+                <li><code>sudo apt upgrade</code></li>
+            </ul>
+            <p>Confirmer les mises à jour avec 'O' si demandé.</p>
+            
+            <h2>2. Configuration et vérification du réseau</h2>
+            <ul>
+                <li>Vérifier la carte réseau : <code>ip a</code> ou <code>sudo apt install net-tools && ifconfig</code></li>
+                <li>Dans VirtualBox : Mode réseau → Accès par pont (bridge) sur la carte physique (Wi-Fi/Ethernet).</li>
+                <li>Configuration manuelle (si besoin) : Éditer <code>/etc/network/interfaces</code> avec nano, puis redémarrer : <code>/etc/init.d/networking restart</code> ou <code>ifdown enp0s3 && ifup enp0s3</code>.</li>
+                <li>Vérifier la connectivité : ping vers routeur, Internet, etc.</li>
+            </ul>
+            
+            <h2>3. Mise en place d’un accès distant SSH</h2>
+            <ul>
+                <li>Installation : <code>sudo apt install openssh-server</code></li>
+                <li>Créer un utilisateur dédié : <code>sudo adduser userssh</code> (mot de passe : mdp)</li>
+                <li>Connexion depuis client (ex. MobaXterm) : <code>ssh userssh@IP_DU_SERVEUR</code></li>
+                <li>Passer root si besoin : <code>su -</code></li>
+            </ul>
+            
+            <h2>4. Conclusion</h2>
+            <p>Le serveur est maintenant mis à jour, accessible à distance et prêt à accueillir des applications web (GLPI, Moodle, WordPress, etc.).</p>
+            
+            <!-- Ajoute tes captures d'écran ici -->
+            <!-- <img src="images/lamp-etape1.png" alt="Configuration réseau"> -->
+            <!-- <img src="images/lamp-etape2.png" alt="SSH connexion"> -->
+            <!-- etc. -->
+        </section>
+    </main>
+    <footer>
+		<p>© 2026 Ioen Le Gourlay-Denis – <a href="mentions-legales.html">Tous droits réservés</a></p>
+	</footer>
+</body>
+</html>

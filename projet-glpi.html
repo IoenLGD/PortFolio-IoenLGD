@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLPI - Installation sur Debian 12 - Ioen Le Gourlay-Denis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+		<a href="javascript:history.back()" class="back-arrow" title="Retour à la page précédente">←</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="cv.html">CV</a></li>
+				<li><a href="projets.html">Projets</a></li>
+				<li><a href="stages.html">Stages</a></li>
+				<li><a href="contact.html">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
+    <main>
+        <section id="projet">
+            <h1>Installation pas-à-pas de GLPI 10 sur Debian 12</h1>
+            <p>Projet réalisé en BTS SIO SISR : Mise en place de GLPI, outil open-source de gestion de parc informatique, ticketing et helpdesk. Installation sur Debian 12 avec stack LAMP (Apache2, PHP 8.2-FPM, MariaDB), configuration sécurisée et bonnes pratiques.</p>
+            <p>Référence : Tutoriel IT-Connect (adapté et testé).</p>
+
+            <h2>1. Prérequis</h2>
+            <ul>
+                <li>Debian 12 fraîchement installée (VM ou physique)</li>
+                <li>Accès root ou sudo</li>
+                <li>PHP ≥ 8.2</li>
+                <li>MariaDB ≥ 10.6 ou MySQL ≥ 8.0</li>
+                <li>Extensions PHP : curl, gd, intl, mysql, zip, bcmath, mbstring, xml, bz2, openssl</li>
+            </ul>
+
+            <h2>2. Mise à jour du système</h2>
+            <pre>
+sudo apt update && sudo apt upgrade -y
+            </pre>
+
+            <h2>3. Installation des paquets nécessaires</h2>
+            <pre>
+sudo apt install apache2 php8.2-fpm mariadb-server
+sudo apt install php8.2-{curl,gd,intl,mysql,zip,bcmath,mbstring,xml,bz2,ldap} -y  # ldap optionnel
+            </pre>
+
+            <h2>4. Sécurisation et configuration MariaDB</h2>
+            <pre>
+sudo mariadb-secure-installation
+            </pre>
+            <p>Suivre les prompts : définir mot de passe root, supprimer users anonymes, désactiver login root distant, supprimer DB test.</p>
+            <p>Créer la base GLPI :</p>
+            <pre>
+sudo mysql -u root -p
+CREATE DATABASE db_glpi CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE USER 'glpi_adm'@'localhost' IDENTIFIED BY 'MotDePasseTresFort123!';
+GRANT ALL PRIVILEGES ON db_glpi.* TO 'glpi_adm'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+            </pre>
+
+            <h2>5. Téléchargement et extraction de GLPI</h2>
+            <p>Télécharge la dernière version stable (ex. 10.0.x) depuis GitHub :</p>
+            <pre>
+cd /tmp
+wget https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz   # Adapter la version si besoin
+sudo tar -xzvf glpi-10.0.16.tgz -C /var/www/
+sudo mv /var/www/glpi-10.0.16 /var/www/glpi
+sudo chown -R www-data:www-data /var/www/glpi
+            </pre>
+
+            <h2>6. Séparation des répertoires pour sécurité (recommandé depuis GLPI 10)</h2>
+            <pre>
+sudo mkdir -p /etc/glpi /var/lib/glpi/files /var/log/glpi
+sudo chown -R www-data:www-data /etc/glpi /var/lib/glpi /var/log/glpi
+
+sudo mv /var/www/glpi/config /etc/glpi/
+sudo mv /var/www/glpi/files /var/lib/glpi/files
+
+# Fichier downstream.php dans /var/www/glpi/inc/downstream.php
+sudo nano /var/www/glpi/inc/downstream.php
+            </pre>
+            <p>Contenu du fichier downstream.php :</p>
+            <pre>
+&lt;?php
+define('GLPI_CONFIG_DIR', '/etc/glpi/');
+if (file_exists(GLPI_CONFIG_DIR . '/local_define.php')) {
+    require_once GLPI_CONFIG_DIR . '/local_define.php';
+}
+            </pre>
+            <p>Fichier /etc/glpi/local_define.php :</p>
+            <pre>
+&lt;?php
+define('GLPI_VAR_DIR', '/var/lib/glpi/files');
+define('GLPI_LOG_DIR', '/var/log/glpi');
+            </pre>
+
+            <h2>7. Configuration Apache (VirtualHost)</h2>
+            <pre>
+sudo nano /etc/apache2/sites-available/glpi.conf
+            </pre>
+            <p>Contenu exemple :</p>
+            <pre>
+&lt;VirtualHost *:80>
+    ServerName glpi.mon-domaine.fr   # ou IP
+    DocumentRoot /var/www/glpi/public
+
+    &lt;Directory /var/www/glpi/public>
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+
+        RewriteEngine On
+        RewriteCond %{HTTP:Authorization} ^(.+)$
+        RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ index.php [QSA,L]
+    &lt;/Directory>
+
+    &lt;FilesMatch \.php$>
+        SetHandler "proxy:unix:/run/php/php8.2-fpm.sock|fcgi://localhost/"
+    &lt;/FilesMatch>
+&lt;/VirtualHost>
+            </pre>
+            <pre>
+sudo a2ensite glpi.conf
+sudo a2enmod rewrite proxy_fcgi setenvif
+sudo a2enconf php8.2-fpm
+sudo systemctl restart apache2 php8.2-fpm
+            </pre>
+
+            <h2>8. Finalisation via navigateur</h2>
+            <ul>
+                <li>Accéder à http://IP_DU_SERVEUR ou http://glpi.mon-domaine.fr</li>
+                <li>Suivre l'assistant : choisir langue, vérifier prérequis, entrer infos DB (localhost, glpi_adm, mot de passe, db_glpi)</li>
+                <li>Attendre l'installation de la base</li>
+                <li>Connexion par défaut : glpi / glpi</li>
+                <li>Changer immédiatement le mot de passe admin</li>
+                <li>Supprimer le fichier install pour sécurité :
+                    <pre>sudo rm /var/www/glpi/install/install.php</pre>
+                </li>
+            </ul>
+
+            <h2>Conclusion</h2>
+            <p>GLPI est maintenant opérationnel pour gérer parc, tickets, inventaire, etc. En production : ajouter HTTPS (Let's Encrypt), firewall (UFW), et backups réguliers.</p>
+
+            <!-- Ajoute tes captures d'écran ici -->
+            <!-- <img src="images/glpi-install-1.png" alt="Assistant installation GLPI"> -->
+            <!-- <img src="images/glpi-login.png" alt="Interface GLPI"> -->
+        </section>
+    </main>
+    <footer>
+		<p>© 2026 Ioen Le Gourlay-Denis – <a href="mentions-legales.html">Tous droits réservés</a></p>
+	</footer>
+</body>
+</html>

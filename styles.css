@@ -1,0 +1,265 @@
+/* styles.css - Portfolio Ioen Le Gourlay-Denis - BTS SIO SISR */
+/* Version avant ajout photo - Flèche dans barre bleue - Écart menu réduit - 16 février 2026 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fc;
+    color: #1e293b;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Barre bleue du haut */
+header {
+    background: linear-gradient(135deg, #001f5b 0%, #003366 100%);
+    padding: 1.1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Flèche retour en haut à gauche (dans la barre bleue) */
+.back-arrow {
+    font-size: 2.8rem;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.back-arrow:hover {
+    color: #bbdefb;
+    transform: scale(1.15);
+}
+
+/* Menu aligné à droite */
+nav {
+    display: flex;
+    justify-content: flex-end;
+}
+
+nav ul {
+    display: flex;
+    gap: 1.4rem;               /* Écart réduit entre Accueil · CV · Projets · Stages · Contact */
+    list-style: none;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.08rem;
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Contenu principal */
+main {
+    max-width: 1000px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem;
+}
+
+section {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    margin-bottom: 3rem;
+}
+
+h1 {
+    color: #001f5b;
+    font-size: 2.5rem;
+    margin-bottom: 1.4rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 4px solid #003366;
+}
+
+h2 {
+    color: #003366;
+    font-size: 1.85rem;
+    margin: 2rem 0 1rem;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    display: block;
+    width: 65px;
+    height: 3px;
+    background: #003366;
+    margin-top: 0.7rem;
+}
+
+.btn {
+    display: inline-block;
+    background: #003366;
+    color: white;
+    padding: 0.85rem 1.7rem;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: #001f5b;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 51, 102, 0.25);
+}
+
+.btn-group {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+/* Styles CV */
+.cv-header {
+    text-align: center;
+    padding-bottom: 2.2rem;
+    border-bottom: 3px solid #003366;
+    margin-bottom: 2.5rem;
+}
+
+.cv-header h1 {
+    font-size: 2.9rem;
+    margin-bottom: 0.5rem;
+    border: none;
+}
+
+.cv-header p {
+    font-size: 1.12rem;
+    margin: 0.5rem 0;
+    color: #444;
+}
+
+.cv-block {
+    margin: 2rem 0;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e0e7ff;
+}
+
+.cv-block:last-child {
+    border-bottom: none;
+}
+
+.cv-block ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.cv-block ul li {
+    margin: 0.9rem 0;
+    padding-left: 1.8rem;
+    position: relative;
+}
+
+.cv-block ul li::before {
+    content: "•";
+    color: #003366;
+    position: absolute;
+    left: 0;
+    font-size: 1.5rem;
+}
+
+/* Projets / Stages */
+.projet, .stage {
+    background: #f8faff;
+    padding: 1.8rem;
+    border-radius: 10px;
+    margin: 1.8rem 0;
+    border-left: 5px solid #003366;
+}
+
+.projet h2, .stage h2 {
+    margin-top: 0;
+    font-size: 1.6rem;
+}
+
+/* Blocs code */
+pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1.3rem;
+    border-radius: 9px;
+    overflow-x: auto;
+    font-size: 0.96rem;
+    margin: 1.1rem 0;
+}
+
+code {
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    border-radius: 9px;
+    margin: 1.4rem 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+footer {
+    background: #001f5b;
+    color: white;
+    text-align: center;
+    padding: 1.3rem;
+    margin-top: 4rem;
+    font-size: 0.97rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    header {
+        flex-direction: column;
+        padding: 1.2rem;
+    }
+    .back-arrow {
+        margin-bottom: 1rem;
+        font-size: 2.6rem;
+        align-self: flex-start;
+    }
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.2rem;
+    }
+    main {
+        padding: 1rem;
+    }
+    section {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .btn {
+        display: block;
+        margin: 0.8rem auto;
+        width: 90%;
+        text-align: center;
+    }
+    nav ul li a {
+        font-size: 1rem;
+        padding: 0.5rem 0.9rem;
+    }
+}
